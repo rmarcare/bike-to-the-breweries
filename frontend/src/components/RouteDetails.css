@@ -1,0 +1,59 @@
+
+.route-details-container {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  background-color: #f9f9f9;
+}
+
+.route-details-container.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #888;
+  font-size: 1.1em;
+}
+
+.route-details-container h3 {
+  margin-top: 0;
+  color: #282c34;
+}
+
+.route-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9em;
+}
+
+.stops-list h4 {
+  margin-top: 20px;
+  color: #333;
+}
+
+.stops-list ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.stops-list li {
+  background-color: #fff;
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+.stops-list li a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.stops-list li a:hover {
+  text-decoration: underline;
+}

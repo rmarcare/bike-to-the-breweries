@@ -1,0 +1,9 @@
+# Dependencies
+/node_modules
+/backend/__pycache__
+
+# Environment variables
+.env
+
+# Build output
+/frontend/build
