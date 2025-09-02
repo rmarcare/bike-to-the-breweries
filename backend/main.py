@@ -33,8 +33,7 @@ app = FastAPI()
 # Set up CORS
 app.add_middleware(
     CORSMiddleware,
-    # TODO: Replace with your actual frontend URL in production
-    allow_origins=["http://localhost:3000", "https://bike-to-the-breweries-<project-hash>-uc.a.run.app"], 
+    allow_origins=["http://localhost:3000", "https://bike-to-the-breweries-ulqnobp4ja-uc.a.run.app"], 
     allow_credentials=True,
     allow_methods=["POST"],
     allow_headers=["Content-Type"],
