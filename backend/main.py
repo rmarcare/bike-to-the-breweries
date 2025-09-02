@@ -14,7 +14,16 @@ import googlemaps
 load_dotenv()
 
 # --- API Clients and Configuration ---
-API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+def get_google_maps_api_key():
+    # Check for the secret file first (for Cloud Run)
+    secret_path = "/etc/secrets/GOOGLE_MAPS_API_KEY"
+    if os.path.exists(secret_path):
+        with open(secret_path, "r") as f:
+            return f.read().strip()
+    # Fallback to environment variable (for local development)
+    return os.getenv("GOOGLE_MAPS_API_KEY")
+
+API_KEY = get_google_maps_api_key()
 gmaps = googlemaps.Client(key=API_KEY) if API_KEY else None
 
 app = FastAPI()
@@ -24,7 +33,8 @@ app = FastAPI()
 # Set up CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://your-frontend-domain.com"], 
+    # TODO: Replace with your actual frontend URL in production
+    allow_origins=["http://localhost:3000", "https://bike-to-the-breweries-<project-hash>-uc.a.run.app"], 
     allow_credentials=True,
     allow_methods=["POST"],
     allow_headers=["Content-Type"],
