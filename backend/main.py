@@ -135,6 +135,8 @@ def plan_ride(request: RideRequest):
 
 # --- Static Files and Catch-all Route ---
 
+app.mount("/static", StaticFiles(directory="static/build"), name="static")
+
 @app.get("/")
 async def read_index():
-    return FileResponse("static/index.html")
+    return FileResponse("static/build/index.html")
