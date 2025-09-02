@@ -20,3 +20,6 @@ steps:
 
 images:
 - 'gcr.io/$PROJECT_ID/bike-to-the-breweries:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
