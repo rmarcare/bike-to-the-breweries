@@ -6,7 +6,8 @@ WORKDIR /app/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm install
 
-COPY frontend/ ./
+COPY frontend/ ./ 
+ENV PUBLIC_URL=.
 RUN npm run build
 
 # Stage 2: Build the Python backend
