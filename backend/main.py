@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import json
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import random
 import os
 import re
@@ -17,33 +19,22 @@ gmaps = googlemaps.Client(key=API_KEY) if API_KEY else None
 
 app = FastAPI()
 
+# --- Middleware ---
+
 # Set up CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["http://localhost:3000", "https://your-frontend-domain.com"], 
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
 )
-
-# --- Helper Functions ---
-
-def parse_distance_from_prompt(prompt: str) -> str | None:
-    """Parses a distance like '40 miles' from the user's prompt."""
-    match = re.search(r'(\d+)\s*(mile|km)s?', prompt, re.IGNORECASE)
-    if match:
-        unit = 'mi' if 'mile' in match.group(2).lower() else 'km'
-        return f"{match.group(1)} {unit}"
-    return None
 
 # --- Pydantic Models ---
 class RideRequest(BaseModel):
     prompt: str
 
 # --- API Endpoints ---
-@app.get("/")
-def read_root():
-    return {"message": "Bike to the Breweries Backend"}
 
 @app.post("/api/plan-ride")
 def plan_ride(request: RideRequest):
@@ -104,11 +95,8 @@ def plan_ride(request: RideRequest):
             place_id = place.get('place_id')
             website = '#'
             if place_id:
-                try:
-                    place_details = gmaps.place(place_id=place_id, fields=['website'])
-                    website = place_details.get('result', {}).get('website', '#')
-                except Exception:
-                    website = '#'
+                place_details = gmaps.place(place_id=place_id, fields=['website'])
+                website = place_details.get('result', {}).get('website', '#')
 
             ordered_stops.append({
                 "name": place.get('name'),
@@ -135,3 +123,11 @@ def plan_ride(request: RideRequest):
 
     except Exception as e:
         return {"error": f"An unexpected error occurred: {e}"}
+
+# --- Static Files and Catch-all Route ---
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/{full_path:path}")
+async def catch_all(full_path: str):
+    return FileResponse("static/index.html")
