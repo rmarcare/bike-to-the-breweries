@@ -137,6 +137,14 @@ def plan_ride(request: RideRequest):
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/logo192.png")
+async def read_logo192():
+    return FileResponse("static/logo192.png")
+
+@app.get("/logo512.png")
+async def read_logo512():
+    return FileResponse("static/logo512.png")
+
 @app.get("/manifest.json")
 async def read_manifest():
     return FileResponse("static/manifest.json")
