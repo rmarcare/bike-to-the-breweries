@@ -139,16 +139,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/logo192.png")
 async def read_logo192():
-    return FileResponse("static/logo192.png")
+    return FileResponse("logo192.png")
 
 @app.get("/logo512.png")
 async def read_logo512():
-    return FileResponse("static/logo512.png")
+    return FileResponse("logo512.png")
 
 @app.get("/manifest.json")
 async def read_manifest():
-    return FileResponse("static/manifest.json")
+    return FileResponse("manifest.json")
 
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
-    return FileResponse("static/index.html")
+    return FileResponse("index.html")
