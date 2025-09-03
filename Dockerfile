@@ -1,28 +1,36 @@
-FROM python:3.10-slim
+# Stage 1: Build the React frontend
+FROM node:18-alpine AS build
+WORKDIR /app/frontend
 
+# Copy frontend package files and install dependencies
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
+
+# Copy the rest of the frontend source code
+COPY frontend/ ./
+
+# Build the frontend
+RUN npm run build
+
+# Stage 2: Build the Python backend
+FROM python:3.10-slim
 WORKDIR /app
 
-# Install node and npm
-RUN apt-get update && apt-get install -y nodejs npm
-
-# Install backend dependencies
+# Copy backend requirements and install dependencies
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend code
+# Copy the backend code
 COPY backend/ .
 
-# Install frontend dependencies and build
-COPY frontend/ ./
-RUN npm install
-RUN npm run build
-
-# Copy the built frontend to the static directory
-RUN mkdir -p static
-RUN cp -r /app/build/* /app/static/
+# Copy the built frontend from the build stage
+COPY --from=build /app/frontend/build ./static
 
 # Expose the port the app runs on
 EXPOSE 8080
 
+# Set the PORT environment variable (if not already set by Cloud Run)
+ENV PORT 8080
+
 # Command to run the application
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
