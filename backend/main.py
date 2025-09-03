@@ -137,6 +137,10 @@ def plan_ride(request: RideRequest):
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/manifest.json")
+async def read_manifest():
+    return FileResponse("static/manifest.json")
+
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
     return FileResponse("static/index.html")
